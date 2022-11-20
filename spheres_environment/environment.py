@@ -1,4 +1,29 @@
-"""
+""" Data structures and methods for a 3D virtual environment that 
+    contains interacting spherical objects.
+
+Examples
+--------
+
+Initialize a virtual environment.
+
+>>> environment = Environment()
+
+Add a sphere object to the environment.
+
+>>> sphere = environment.initialize_object('sphere')
+
+Verify the properties of the sphere object.
+
+>>> sphere.object_properties
+['position', 'radius']
+
+Change the properties from the default values.
+
+>>> sphere.position = (1, 2, 3)
+>>> sphere.radius = 2
+>>> sphere
+{'position': {'x': 1.0, 'y': 2.0, 'z': 3.0}, 'radius': 2.0}
+
 """
 
 # Copyright 2022 Carnegie Mellon University Neuromechatronics Lab (a.whit)
@@ -9,4 +34,24 @@
 # 
 # Contact: a.whit (nml@whit.contact)
 
+
+# Local imports.
+from spheres_environment import base
+from spheres_environment.sphere import Sphere
+
+# Virtual environment class.
+class Environment(base.Environment):
+    """ Defines rules and data structures representing the interaction 
+        among spheres in a 3D virtual environment.
+    """
+    object_type_map = dict(sphere=Sphere)
+    
+  
+
+# Main.
+if __name__ == '__main__':
+    import doctest
+    doctest.testmod()
+    
+  
 

@@ -31,11 +31,11 @@ of objects that the environment recognizes.
 
 Initialize an object with the default object type.
 
->>> environment.initialize_object('object_a')
+>>> object_a = environment.initialize_object('object_a')
 
 Initialize an object with the "situated object" type.
 
->>> environment.initialize_object('object_b', 'situated_object')
+>>> object_b = environment.initialize_object('object_b', 'situated_object')
 
 The initialized objects are part of the environment data structure, but 
 uninitialized objects are not recognized.
@@ -50,16 +50,17 @@ False
 The situated object (`object_b`) has a `position` property, but the 
 other object (`object_a`) does not.
 
->>> environment['object_a'].is_object_property('position')
+>>> object_a.is_object_property('position')
 False
->>> environment['object_b'].is_object_property('position')
-False
+>>> object_b.is_object_property('position')
+True
+>>> object_b.object_properties
+['position']
 
 The situated object is characterized by the `position` property, 
 which consists of a dict of three floats. Test the position property 
 for `object_b`.
 
->>> object_b = environment['object_b']
 >>> object_b.position
 {'x': 0.0, 'y': 0.0, 'z': 0.0}
 >>> object_b['position'] = dict(x=1, y=2, z=3)
@@ -82,66 +83,12 @@ The environment consists of all objects and their properties.
 # Contact: a.whit (nml@whit.contact)
 
 
-class object_property(property):
-    """ A property of an object in a virtual environment.
-    
-    Object properties are distinguished from general Python properties 
-    in order to facilitate convenient type checking.
-    """
-    pass
-    
-  
+# Local imports.
+from spheres_environment.object import object_property
+from spheres_environment.object import Object
 
-class Object(dict):
-    """ Base class for all objects contained in an environment.
-    
-    Arguments
-    ---------
-    key : str
-        A unique key used to identify an object in the environment.
-    """
-    def __init__(self, key, **kwargs):
-        """
-        """
-        self._key = key
-        super().__init__(**kwargs)
-        
-    @property
-    def key(self):
-        """ A unique key used to identify an object in the 
-            environment.
-        """
-        return self._key
-    
-    @property
-    def object_properties(self):
-        """ A list of keys for all object properties. """
-        attributes = dir(self)
-        attributes.remove('object_properties')
-        is_object_property = lambda o: isinstance(o, object_property)
-        return [k for k in attributes 
-                if is_object_property(getattr(self, k, {}))]
-    
-    def is_object_property(self, key):
-        """ Tests where or not a provided key maps to a property that 
-            has been defined for this object.
-        """
-        return key in self.object_properties
-        
-    #def __getitem__(self, key):
-    #    """
-    #    """
-    #    #if key not in self.object_properties: raise Exception
-    #    return super().__getitem__(key)
-    #    
-    #def __setitem__(self, key, value):
-    #    """
-    #    """
-    #    #if key not in self.object_properties: raise Exception
-    #    super().__setitem__(key, value)
-    
-  
 
+# Environment class.
 class Environment(dict):
     """ Defines rules and data structures representing the interaction 
         among objects in a virtual environment.
@@ -159,7 +106,7 @@ class Environment(dict):
         they correspond to.
     """
     
-    def initialize_object(self, key, type_key='object', **kwargs):
+    def initialize_object(self, key, type_key=None, **kwargs):
         """ Initialize a new object in the environment.
         
         Although objects can be initialized directly using the mapping 
@@ -171,12 +118,21 @@ class Environment(dict):
         ---------
         key : str
             Unique key used to identify an object in the environment.
-        type_key : str, default='object'
+        type_key : str
             Unique key that references an item in the `object_type_map` 
-            class variable. Defines the type of the initialized object.
+            class variable. Defines the type of the initialized object. 
+            Defaults to the first key in the mapping, if not specified.
+        
+        Returns
+        -------
+        object
+            The initialized object instance.
         """
+        default_key = next(iter(self.object_type_map))
+        type_key = type_key if type_key else default_key
         object_class = self.object_type_map[type_key]
         self[key] = object_class(key=key, **kwargs)
+        return self[key]
         
     def destroy_object(self, key):
         """ Remove an object from the environment. """
@@ -184,6 +140,7 @@ class Environment(dict):
    
  
 
+# Main.
 if __name__ == '__main__':
     import doctest
     doctest.testmod()

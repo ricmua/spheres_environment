@@ -55,6 +55,8 @@ from spheres_environment import base
 class Sphere(base.Object):
     """ A situated, volumetric, spherical object. """
     
+    TYPE='sphere'
+    
     @base.object_property
     def position(self):
         """ Position of the sphere in 3D space. """
@@ -77,6 +79,7 @@ class Sphere(base.Object):
     
     @radius.setter
     def radius(self, value):
+        value = value['value'] if isinstance(value, dict) else value
         assert not isinstance(value, collections.abc.Collection)
         self['radius'] = float(value)
     

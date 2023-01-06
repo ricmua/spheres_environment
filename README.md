@@ -63,6 +63,14 @@ Add a pair of spheres to the environment.
 
 ```
 
+Set the sphere [RGBA] colors.
+
+```python
+>>> sphere_a.color = (0.0, 1.0, 0.0, 1.0)
+>>> sphere_b.color = (0.0, 0.0, 1.0, 1.0)
+
+```
+
 Verify that the spheres overlap, given the default property values.
 
 ```python
@@ -105,12 +113,20 @@ in the environment into dict records.
 >>> records = [o.data for o in environment.values()]
 >>> import pprint
 >>> pprint.pp(records)
-[{'position/x': 0.0,
+[{'color/r': 0.0,
+  'color/g': 1.0,
+  'color/b': 0.0,
+  'color/a': 1.0,
+  'position/x': 0.0,
   'position/y': 0.0,
   'position/z': 0.0,
   'radius': 0.1,
   'key': 'sphere_a'},
- {'position/x': 1.0,
+ {'color/r': 0.0,
+  'color/g': 0.0,
+  'color/b': 1.0,
+  'color/a': 1.0,
+  'position/x': 1.0,
   'position/y': 1.0,
   'position/z': 1.0,
   'radius': 1.0,
@@ -172,4 +188,6 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 [pytest]: https://docs.pytest.org/
 
 [unittest]: https://docs.python.org/3/library/unittest.html
+
+[RGBA]: https://en.wikipedia.org/wiki/RGBA_color_model
 

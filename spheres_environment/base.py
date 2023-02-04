@@ -137,6 +137,24 @@ class Environment(dict):
     def destroy_object(self, key):
         """ Remove an object from the environment. """
         del self[key]
+        
+    def set_property(self, object_key, property_key, **kwargs):
+        """ Set the value of an object property.
+        
+        Arguments
+        ---------
+        object_key : str
+            Object key that identifies the object in the environment for which 
+            a property value is to be set.
+        property_key : str
+            Property key that identifies the property for which a value is to 
+            be set.
+        **kwargs : dict
+            Keyword arguments corresponding to the fields of the property to be 
+            set. For scalar properties, use `value` as the key.
+        """
+        value = kwargs['value'] if (list(kwargs) == ['value']) else kwargs
+        setattr(self[object_key], property_key, value)
    
  
 

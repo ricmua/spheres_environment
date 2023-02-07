@@ -34,6 +34,17 @@ Retrieve the sphere data in records format.
  'radius': 2.0,
  'key': 'sphere'}
 
+Test whether or not the sphere intersects with other spheres centered at the 
+origin.
+
+>>> sphere.intersects(Sphere('other'))
+False
+>>> sphere.intersects(Sphere('other', position=dict(x=0.0, y=2.0, z=3.0)))
+True
+>>> sphere.intersects(Sphere('other', radius=15))
+True
+
+
 """
 
 # Copyright 2022 Carnegie Mellon University Neuromechatronics Lab (a.whit)
@@ -48,8 +59,13 @@ Retrieve the sphere data in records format.
 # Import collection abstract base classes.
 import collections.abc
 
+# Import numpy.
+import numpy
+from numpy import linalg
+
 # Local imports.
 from spheres_environment import base
+
 
 # Sphere class.
 class Sphere(base.Object):
@@ -82,6 +98,34 @@ class Sphere(base.Object):
         value = value['value'] if isinstance(value, dict) else value
         assert not isinstance(value, collections.abc.Collection)
         self['radius'] = float(value)
+        
+    def intersects(self, other):
+        """ Test whether or not this sphere intersects with another.
+        
+        Parameters
+        ----------
+        other : Sphere
+            A Sphere to compare against.
+        
+        Returns
+        -------
+        intersects : bool
+            True if the spheres intersect.
+        """
+        # Compute the distance between the sphere center and the point.
+        p_s = tuple(self.position[k] for k in ('x', 'y', 'z'))
+        p_o = tuple(other.position[k] for k in ('x', 'y', 'z'))
+        d = numpy.array(p_s) - p_o
+        m = numpy.sqrt((d**2).sum())
+        
+        # Test whether or not any point lies within the sphere.
+        return (m <= self.radius + other.radius)
+
+        
+    #def __str__(self):
+    #    from pprint import pformat
+    #    return pformat(self, indent=1)
+
     
   
 

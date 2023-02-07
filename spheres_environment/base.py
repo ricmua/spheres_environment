@@ -72,9 +72,42 @@ The environment consists of all objects and their properties.
 >>> environment
 {'object_a': {}, 'object_b': {'position': {'x': 1, 'y': 2, 'z': 3}}}
 
+Confirm the expected state of the current environment history.
+
+>>> current_state = environment
+>>> list(environment.history) == [current_state, current_state]
+True
+
+Modify the environment and confirm that the changes are reflected in the state 
+history buffer.
+
+>>> from copy import copy
+>>> prior_state = copy(environment)
+>>> environment.destroy_object('object_a')
+>>> list(environment.history) == [prior_state, current_state]
+True
+
+Push a copy of the current state to the state history buffer, and drop the 
+oldest sample from the buffer.
+
+>>> environment.update()
+>>> list(environment.history) == [current_state, current_state]
+True
+
+Modify the environment a second time.
+
+>>> environment['object_b']['position'] = dict(x=3, y=2, z=1)
+
+Confirm that the state history has been updated appropriately.
+
+>>> import pprint
+>>> pprint.pp(list(environment.history))
+[{'object_b': {'position': {'x': 1, 'y': 2, 'z': 3}}},
+ {'object_b': {'position': {'x': 3, 'y': 2, 'z': 1}}}]
+
 """
 
-# Copyright 2022 Carnegie Mellon University Neuromechatronics Lab (a.whit)
+# Copyright 2022-2023 Carnegie Mellon University Neuromechatronics Lab (a.whit)
 # 
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -83,9 +116,16 @@ The environment consists of all objects and their properties.
 # Contact: a.whit (nml@whit.contact)
 
 
+# Import copy.
+from copy import copy
+
+# Import deque.
+from collections import deque
+
 # Local imports.
 from spheres_environment.object import object_property
 from spheres_environment.object import Object
+from spheres_environment.history import Buffer
 
 
 # Environment class.
@@ -100,7 +140,7 @@ class Environment(dict):
     to operate on, and define interactions between, the objects in the 
     environment.
     """
-     
+    
     object_type_map = dict(object=Object)
     """ Mapping between object type keys and the object classes that 
         they correspond to.
@@ -137,6 +177,35 @@ class Environment(dict):
     def destroy_object(self, key):
         """ Remove an object from the environment. """
         del self[key]
+        
+    def __copy__(self):
+        """ Copy implementation for Environments.
+        
+        See the [copy] package.
+        
+        [copy]: https://docs.python.org/3/library/copy.html
+        """
+        kwargs = {k: copy(v) for (k, v) in self.items()}
+        return self.__class__(**kwargs)
+        
+    @property
+    def history_length(self):
+        """ Length of the state history buffer. """
+        return len(self._history)
+        
+    @history_length.setter
+    def history_length(self, value):
+        self._history = Buffer(obj=self, length=value)
+    
+    @property
+    def history(self):
+        """ Buffer that stores the environment state history. """
+        if not hasattr(self, '_history'): self._history = Buffer(obj=self)
+        return self._history
+    
+    def update(self):
+        """ Sample and record the state of the environment. """
+        self.history.sample()
    
  
 

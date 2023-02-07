@@ -46,6 +46,9 @@ class Environment(base.Environment):
     """
     object_type_map = dict(sphere=Sphere)
     
+    def set_color(self, key, r=0.0, g=0.0, b=0.0, a=1.0):
+        self[key].color = dict(r=r, g=g, b=b, a=a)
+    
   
 
 # Main.

@@ -23,6 +23,9 @@ particular location in some virtual 3D space.
 ...         position = self.setdefault('position', default)
 ...         position = {k: float(position[k]) for k in ['x', 'y', 'z']}
 ...         return position
+...     @position.setter
+...     def position(self, value):
+...         self['position'] = {**self['position'], **value}
 
 Add the new object class to the environment schema -- or the collection 
 of objects that the environment recognizes.
@@ -104,6 +107,14 @@ Confirm that the state history has been updated appropriately.
 >>> pprint.pp(list(environment.history))
 [{'object_b': {'position': {'x': 1, 'y': 2, 'z': 3}}},
  {'object_b': {'position': {'x': 3, 'y': 2, 'z': 1}}}]
+
+Set an object property via the general environment accessor function, and 
+confirm the change.
+
+>>> environment.set_property('object_b', 'position', x=1.0, z=3.0)
+>>> environment
+{'object_b': {'position': {'x': 1.0, 'y': 2, 'z': 3.0}}}
+
 
 """
 
@@ -206,6 +217,24 @@ class Environment(dict):
     def update(self):
         """ Sample and record the state of the environment. """
         self.history.sample()
+    
+    def set_property(self, object_key, property_key, **kwargs):
+        """ Set the value of an object property.
+        
+        Arguments
+        ---------
+        object_key : str
+            Object key that identifies the object in the environment for which 
+            a property value is to be set.
+        property_key : str
+            Property key that identifies the property for which a value is to 
+            be set.
+        **kwargs : dict
+            Keyword arguments corresponding to the fields of the property to be 
+            set. For scalar properties, use `value` as the key.
+        """
+        value = kwargs['value'] if (list(kwargs) == ['value']) else kwargs
+        setattr(self[object_key], property_key, value)
    
  
 

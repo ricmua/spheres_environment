@@ -51,6 +51,29 @@ Object data is easily converted to a neat records format.
 >>> object_b.data
 {'position/x': 1.0, 'position/y': 2.0, 'position/z': 3.0, 'key': 'object_b'}
 
+Make a copy of `object_b`.
+
+>>> from copy import copy
+>>> object_c = copy(object_b)
+
+Verify that the new object is distinct, but equivalent to `object_b`.
+
+>>> object_c is object_b
+False
+>>> object_c == object_b
+True
+
+Note that the new object has the same key. An equivalent object with a new key 
+can be also be initialized.
+
+>>> object_d = object_c.__class__(key='object_d', **object_c)
+>>> object_d is object_b
+False
+>>> object_d == object_b
+True
+>>> object_d.key == object_b.key
+False
+
 """
 
 # Copyright 2022 Carnegie Mellon University Neuromechatronics Lab (a.whit)
@@ -159,6 +182,15 @@ class Object(dict):
         # Return the result.
         return record
     
+    def __copy__(self):
+        """ Copy implementation for Objects.
+        
+        See the [copy] package.
+        
+        [copy]: https://docs.python.org/3/library/copy.html
+        """
+        return self.__class__(key=self.key, **self)
+        
     #def __getitem__(self, key):
     #    """
     #    """

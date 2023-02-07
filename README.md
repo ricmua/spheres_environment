@@ -6,7 +6,7 @@ date: November 2022
 
 <!-- License
 
-Copyright 2022 Neuromechatronics Lab, Carnegie Mellon University (a.whit)
+Copyright 2022-2023 Neuromechatronics Lab, Carnegie Mellon University (a.whit)
 
 Created by: a. whit. (nml@whit.contact)
 
@@ -34,11 +34,11 @@ accomplished via the [pip install] command:
 pip install path/to/spheres_environment
 ```
 
-The update, user, and editable / development flags are common options that can 
+The upgrade, user, and editable / development flags are common options that can 
 be added to the command:
 
 ```
-pip install -e -U --user path/to/spheres_environment
+pip install --user --upgrade --editable path/to/spheres_environment
 ```
 
 ### Testing
@@ -120,7 +120,7 @@ in the environment into dict records.
 
 ## License
 
-Copyright 2022 [Neuromechatronics Lab][neuromechatronics], 
+Copyright 2022-2023 [Neuromechatronics Lab][neuromechatronics], 
 Carnegie Mellon University
 
 Contributors: 

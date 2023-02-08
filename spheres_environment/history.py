@@ -88,7 +88,7 @@ class Buffer(deque):
         
     def sample(self, obj=None):
         """ Push a copy the current object state into the history buffer. """
-        self._object = obj if obj else self._object
+        self._object = self._object if (obj is None) else obj
         self[-1] = copy(self._object)
         self.rotate(-1)
         self[-1] = self._object

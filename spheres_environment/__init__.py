@@ -45,12 +45,20 @@ in the environment into dict records.
 >>> records = [o.data for o in environment.values()]
 >>> import pprint
 >>> pprint.pp(records)
-[{'position/x': 0.0,
+[{'color/r': 0.0,
+  'color/g': 0.0,
+  'color/b': 0.0,
+  'color/a': 1.0,
+  'position/x': 0.0,
   'position/y': 0.0,
   'position/z': 0.0,
   'radius': 0.1,
   'key': 'sphere_a'},
- {'position/x': 1.0,
+ {'color/r': 0.0,
+  'color/g': 0.0,
+  'color/b': 0.0,
+  'color/a': 1.0,
+  'position/x': 1.0,
   'position/y': 1.0,
   'position/z': 1.0,
   'radius': 1.0,

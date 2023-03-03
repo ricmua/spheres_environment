@@ -15,7 +15,7 @@ Add a sphere object to the environment.
 Verify the properties of the sphere object.
 
 >>> sphere.object_properties
-['position', 'radius']
+['color', 'position', 'radius']
 
 Change the properties from the default values.
 

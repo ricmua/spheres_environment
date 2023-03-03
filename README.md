@@ -43,7 +43,7 @@ pip install --user --upgrade --editable path/to/spheres_environment
 
 ### Testing
 
-Forthcoming.
+See the [testing documentation](doc/markdown/testing.md).
 
 ## Example
 

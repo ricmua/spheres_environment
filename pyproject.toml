@@ -12,7 +12,7 @@ classifiers = [
   "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)",
   "Intended Audience :: Science/Research",
 ]
-version="0.0.1"
+version="0.0.2"
 
 [build-system]
 requires = ["setuptools>=61.0", "setuptools_scm[toml]>=6.2"]
